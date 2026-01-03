@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Student Rankings</h2>
+        <a href="{% url 'dashboard:admin_dashboard' %}" class="btn btn-secondary">Back to Admin Dashboard</a>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="exam_type" class="form-label">Select Exam Type:</label>
+                    <select name="exam_type" id="exam_type" class="form-select">
+                        {% for exam_type_choice in exam_types %}
+                            <option value="{{ exam_type_choice }}" {% if exam_type_choice == selected_exam_type %}selected{% endif %}>
+                                {{ exam_type_choice|title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary mt-3">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <h3>Rankings for {{ selected_exam_type|title }} Exam</h3>
+    
+    {% if students_with_scores %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Student Name</th>
+                        <th>Roll Number</th>
+                        <th>Class</th>
+                        <th>Total Marks</th>
+                        <th>Max Marks</th>
+                        <th>Subjects</th>
+                        <th>Average %</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in students_with_scores %}
+                    <tr>
+                        <td>
+                            {% if record.rank == 1 %}
+                                <span class="badge bg-warning text-dark">1st</span>
+                            {% elif record.rank == 2 %}
+                                <span class="badge bg-secondary">2nd</span>
+                            {% elif record.rank == 3 %}
+                                <span class="badge bg-danger">3rd</span>
+                            {% else %}
+                                {{ record.rank }}
+                            {% endif %}
+                        </td>
+                        <td>{{ record.student.full_name }}</td>
+                        <td>{{ record.student.roll_number }}</td>
+                        <td>{{ record.student.get_class_batch_display }}</td>
+                        <td>{{ record.total_marks }}</td>
+                        <td>{{ record.max_marks }}</td>
+                        <td>{{ record.subject_count }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if record.average_percentage >= 90 %}bg-success
+                                {% elif record.average_percentage >= 80 %}bg-primary
+                                {% elif record.average_percentage >= 70 %}bg-info
+                                {% elif record.average_percentage >= 60 %}bg-warning text-dark
+                                {% elif record.average_percentage >= 40 %}bg-light text-dark
+                                {% else %}bg-danger{% endif %}">
+                                {{ record.average_percentage }}%
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'dashboard:progress_sheet_list' record.student.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <p>No students found with scores for the {{ selected_exam_type|title }} exam.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

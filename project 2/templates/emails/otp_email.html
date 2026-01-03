@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OTP Verification</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .content { background-color: #f9f9f9; padding: 20px; border-radius: 5px; }
+        .otp-code { font-size: 24px; font-weight: bold; color: #007bff; text-align: center; margin: 20px 0; }
+        .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Account Verification</h2>
+        </div>
+        <div class="content">
+            <p>Hello {{ user.username }},</p>
+            <p>Thank you for registering. Please use the following OTP code to verify your email address:</p>
+            
+            <div class="otp-code">{{ otp_code }}</div>
+            
+            <p>This code will expire in {{ expiry_time }}. If you didn't request this, please ignore this email.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2026 Student Platform. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

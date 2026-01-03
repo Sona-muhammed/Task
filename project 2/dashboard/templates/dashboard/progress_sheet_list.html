@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Progress Sheets for {{ student.full_name }}</h2>
+        <div>
+            <a href="{% url 'dashboard:student_list' %}" class="btn btn-secondary">Back to Students</a>
+            <a href="{% url 'dashboard:add_progress_sheet' student.id %}" class="btn btn-primary">Add Progress Sheet</a>
+            <a href="{% url 'dashboard:bulk_progress_sheet_entry' %}?student={{ student.id }}" class="btn btn-success">Bulk Entry</a>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>Student Details</h5>
+            <p><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+            <p><strong>Class/Batch:</strong> {{ student.get_class_batch_display }}</p>
+            <p><strong>Email:</strong> {{ student.email }}</p>
+        </div>
+    </div>
+    
+    {% if progress_sheets %}
+        {% for exam_type, data in exam_summary.items %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>{{ data.sheets.0.get_exam_type_display }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Total Marks</h5>
+                                <h3>{{ data.total_marks }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Max Marks</h5>
+                                <h3>{{ data.max_marks }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Subjects</h5>
+                                <h3>{{ data.subjects_count }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-{{ data.average_percentage < 40 and 'danger' or data.average_percentage < 60 and 'warning' or 'success' }}">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Average %</h5>
+                                <h3>{{ data.average_percentage }}%</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Subject</th>
+                                <th>Exam Date</th>
+                                <th>Marks Obtained</th>
+                                <th>Max Marks</th>
+                                <th>Percentage</th>
+                                <th>Grade</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sheet in data.sheets %}
+                            <tr>
+                                <td>{{ sheet.subject.name }}</td>
+                                <td>{{ sheet.exam_date }}</td>
+                                <td>{{ sheet.marks_obtained }}</td>
+                                <td>{{ sheet.max_marks }}</td>
+                                <td>{{ sheet.percentage|floatformat:2 }}%</td>
+                                <td><span class="badge bg-{{ sheet.grade|lower == 'f' and 'danger' or 'primary' }}">{{ sheet.grade }}</span></td>
+                                <td>
+                                    <a href="{% url 'dashboard:update_progress_sheet' sheet.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="{% url 'dashboard:delete_progress_sheet' sheet.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="alert alert-info">
+        <p>No progress sheets found for this student. <a href="{% url 'dashboard:add_progress_sheet' student.id %}">Add a progress sheet</a> to get started.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

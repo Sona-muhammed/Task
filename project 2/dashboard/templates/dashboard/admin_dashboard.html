@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1>Admin Dashboard</h1>
+            <p>Welcome to the admin dashboard, {{ user.username }}!</p>
+            
+            <div class="row mt-4">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Users</h5>
+                            <h2>{{ user_count }}</h2>
+                            <p class="card-text">Registered users in the system</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Verified Users</h5>
+                            <h2>{{ verified_count|default:"N/A" }}</h2>
+                            <p class="card-text">Email verified accounts</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Pending Verifications</h5>
+                            <h2>{{ unverified_count|default:"N/A" }}</h2>
+                            <p class="card-text">Accounts awaiting email verification</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Students</h5>
+                            <h2>{{ student_count|default:"N/A" }}</h2>
+                            <p class="card-text">Total students in the system</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Progress Sheets</h5>
+                            <h2>{{ progress_sheet_count|default:"N/A" }}</h2>
+                            <p class="card-text">Total progress sheets</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Subjects</h5>
+                            <h2>{{ subject_count|default:"N/A" }}</h2>
+                            <p class="card-text">Total subjects available</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h3>Quick Actions</h3>
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <a href="{% url 'admin:index' %}" class="btn btn-primary">Manage Users</a>
+                    <a href="{% url 'dashboard:student_list' %}" class="btn btn-primary">Manage Students</a>
+                    <a href="{% url 'dashboard:student_ranking' %}" class="btn btn-primary">Student Rankings</a>
+                    <a href="{% url 'dashboard:subject_list' %}" class="btn btn-primary">Manage Subjects</a>
+                    <a href="{% url 'dashboard:bulk_progress_sheet_entry' %}" class="btn btn-primary">Bulk Mark Entry</a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-secondary">User Dashboard</a>
+                    <a href="{% url 'auth_module:logout' %}" class="btn btn-outline-danger">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
